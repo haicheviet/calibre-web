@@ -80,8 +80,10 @@ except ImportError:
 
 @app.after_request
 def add_security_headers(resp):
+    default_host = ["https://code.jquery.com", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net", os.environ["MEILI_HOST"]]
+    configure_trusted_host = config.config_trustedhosts.strip().split(',')
     csp = "default-src 'self'"
-    csp += ''.join([' ' + host for host in config.config_trustedhosts.strip().split(',')])
+    csp += ''.join([' ' + host for host in default_host + configure_trusted_host])
     csp += " 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:; img-src 'self' "
     if request.path.startswith("/author/") and config.config_use_goodreads:
         csp += "images.gr-assets.com i.gr-assets.com s.gr-assets.com"

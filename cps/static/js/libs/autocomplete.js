@@ -11,9 +11,9 @@ async function search_product() {
     const search = await index.search(keySearch, {
         attributesToHighlight: ['title', 'author_sort'],
         attributesToRetrieve: ['title', 'author_sort'],
+        limit: 5,
     });
     const result = [];
-    console.log("search", search);
     let formattedList = search.hits;
     formattedList.forEach(function (formatedItem) {
         let key_result = null;
@@ -23,8 +23,6 @@ async function search_product() {
                 break
             }
         }
-        console.log("key_result", key_result);
-        console.log("formatedItem", formatedItem);
         if (key_result) {
             result.push(formatedItem[key_result]);
         }

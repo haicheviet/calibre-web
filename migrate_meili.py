@@ -1,5 +1,6 @@
 import sqlite3
 import meilisearch
+import os
 
 
 def dict_factory(cursor, row):
@@ -8,13 +9,13 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-conn = sqlite3.connect('/Users/hai/Calibre Library/metadata.db')
+conn = sqlite3.connect(os.environ["LIB_PATH"])
 conn.row_factory = dict_factory
 cur = conn.cursor()
 
 
 
-client = meilisearch.Client('http://localhost:7700')
+client = meilisearch.Client(os.environ["MEILI_HOST"], api_key=os.environ["MEILI_KEY"])
 index = client.index('books')
 index.update_settings({
   'searchableAttributes': [
@@ -22,6 +23,8 @@ index.update_settings({
       'author_sort'
 ]})
 
-data = cur.execute("select * from books;").fetchall()
+df = cur.execute("select * from books;").fetchall()
+print(df[0])
+print(len(df))
 
-index.add_documents(data)
+index.add_documents(df)

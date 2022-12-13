@@ -1,4 +1,5 @@
 from . import logger
+import os
 from datetime import datetime
 from typing import Optional, List, Tuple, Dict
 import meilisearch
@@ -26,7 +27,7 @@ def convert_sql_datetime_to_datetime(text: str) -> Optional[datetime]:
 
 class BookSearch:
     def __init__(self) -> None:
-        self._client = meilisearch.Client("http://localhost:7700", api_key="masterKey")
+        self._client = meilisearch.Client(os.environ["MEILI_HOST"], api_key=os.environ["MEILI_KEY"])
 
         self.index = self._client.index("books")
 
